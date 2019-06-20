@@ -11,7 +11,8 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 
-module.exports = () => {
+module.exports = (on) => {
+  on('task', require('@cypress/code-coverage/task'));
 // `on` is used to hook into various events Cypress emits
 // `config` is the resolved Cypress config
 };
