@@ -100,9 +100,9 @@ export const loadVotes = ({ address, type, callback = () => null }) =>
  * Gets list of all delegates
  */
 export const loadDelegates = ({
-  offset = 0, refresh, q, callback = () => {},
-}) =>
-  (dispatch, getState) => {
+  offset = 0, refresh, q,
+}) => (dispatch, getState) =>
+  new Promise((resolve, reject) => {
     const liskAPIClient = getAPIClient(tokenMap.LSK.key, getState());
     let params = {
       offset,
@@ -110,6 +110,7 @@ export const loadDelegates = ({
       sort: 'rank:asc',
     };
     params = q ? { ...params, search: q } : params;
+    console.log('in action before return');
     getDelegates(liskAPIClient, params)
       .then((response) => {
         updateDelegateCache(response.data, getState().peers);
@@ -117,7 +118,7 @@ export const loadDelegates = ({
           list: response.data,
           refresh,
         }));
-        callback(response);
+        resolve(response);
       })
-      .catch(callback);
-  };
+      .catch(reject);
+  });
