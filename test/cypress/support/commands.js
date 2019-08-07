@@ -23,9 +23,19 @@
 //
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
-import networks from '../../constants/networks';
 // import settings from '../../constants/settings';
+
+import React from 'react';
+import { MemoryRouter as Router } from 'react-router-dom';
+import { I18nextProvider } from 'react-i18next';
+import { Provider } from 'react-redux';
 import { deepMergeObj } from '../../../src/utils/helpers';
+import networks from '../../constants/networks';
+import { accountLoggedIn } from '../../../src/actions/account';
+import { loginType } from '../../../src/constants/hwConstants';
+import { networkSet } from '../../../src/actions/network';
+import i18n from '../../../src/i18n';
+import store from '../../../src/store';
 
 before(() => {
   // Check if lisk core is running
@@ -60,4 +70,30 @@ Cypress.Commands.add('addObjectToLocalStorage', (item, key, value) => {
 Cypress.Commands.add('autologin', (passphrase, network) => {
   localStorage.setItem('liskCoreUrl', network);
   localStorage.setItem('loginKey', passphrase);
+});
+
+Cypress.Commands.add('mountWithContext', (component, { account }) => {
+  store.dispatch(networkSet({
+    name: networks.testnet.name,
+  }));
+  if (account) {
+    store.dispatch(accountLoggedIn({
+      passphrase: account.passphrase,
+      loginType: loginType.normal,
+      hwInfo: {},
+      info: {
+        LSK: account,
+        [undefined]: account,
+      },
+    }));
+  }
+  cy.mount(
+    <Provider store={store}>
+      <Router>
+        <I18nextProvider i18n={i18n}>
+          {component}
+        </I18nextProvider>
+      </Router>
+    </Provider>,
+  );
 });
