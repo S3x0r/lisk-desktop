@@ -13,11 +13,12 @@
 
 // const cucumber = require('cypress-cucumber-preprocessor').default;
 const webpack = require('@cypress/webpack-preprocessor');
+const testConfig = require('../../../config/webpack.config.test');
 
 module.exports = (on) => {
   // on('file:preprocessor', cucumber());
   on('file:preprocessor', webpack({
-    webpackOptions: require('../../../config/webpack.config'),
+    webpackOptions: testConfig,
     watchOptions: {},
   }));
 };

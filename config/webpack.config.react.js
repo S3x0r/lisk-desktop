@@ -8,7 +8,6 @@ const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin
 const fs = require('fs');
 const path = require('path');
 const reactToolboxVariables = require('./reactToolbox.config');
-const I18nScannerPlugin = require('../src/i18n-scanner');
 const bundleVersion = require('../package.json').version;
 
 const getLocales = (url) => {
@@ -127,14 +126,6 @@ module.exports = {
       inlineSource: '.(css)$',
     }),
     new HtmlWebpackInlineSourcePlugin(),
-    new I18nScannerPlugin({
-      translationFunctionNames: ['i18next.t', 'props.t', 'this.props.t', 't'],
-      outputFilePath: './i18n/locales/en/common.json',
-      files: [
-        './src/**/*.js',
-        './app/src/**/*.js',
-      ],
-    }),
     new ContextReplacementPlugin(/moment[/\\]locale$/, new RegExp(langRegex)),
   ],
   module: {

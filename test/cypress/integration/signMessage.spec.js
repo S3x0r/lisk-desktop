@@ -6,6 +6,8 @@ import React from 'react';
 import SignMessage from '../../../src/components/signMessage';
 
 describe('SignMessage', () => {
-  cy.mount(<SignMessage />);
-  cy.contains('Sign Message');
+  it('SignMessage', () => {
+    cy.mount(<SignMessage />);
+    cy.contains('Sign Message');
+  });
 });

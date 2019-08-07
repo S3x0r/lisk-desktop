@@ -12,6 +12,7 @@
 // You can read more here:
 // https://on.cypress.io/configuration
 // ***********************************************************
-/* eslint-disable */
+/* eslint-disable import/no-extraneous-dependencies */
+import 'babel-polyfill';
 import 'cypress-react-unit-test';
 import './commands';
