@@ -72,7 +72,7 @@ Cypress.Commands.add('autologin', (passphrase, network) => {
   localStorage.setItem('loginKey', passphrase);
 });
 
-Cypress.Commands.add('mountWithContext', (component, { account }) => {
+Cypress.Commands.add('mountWithContext', (component, { account, route = '/' }) => {
   store.dispatch(networkSet({
     name: networks.testnet.name,
   }));
@@ -89,7 +89,7 @@ Cypress.Commands.add('mountWithContext', (component, { account }) => {
   }
   cy.mount(
     <Provider store={store}>
-      <Router>
+      <Router initialEntries={[route]}>
         <I18nextProvider i18n={i18n}>
           {component}
         </I18nextProvider>
