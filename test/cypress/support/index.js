@@ -12,6 +12,6 @@
 // You can read more here:
 // https://on.cypress.io/configuration
 // ***********************************************************
-
-import 'cypress-pipe';
+/* eslint-disable */
+import 'cypress-react-unit-test';
 import './commands';

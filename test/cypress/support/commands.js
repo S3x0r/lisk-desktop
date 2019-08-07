@@ -24,7 +24,7 @@
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 import networks from '../../constants/networks';
-import settings from '../../constants/settings';
+// import settings from '../../constants/settings';
 import { deepMergeObj } from '../../../src/utils/helpers';
 
 before(() => {
@@ -32,13 +32,13 @@ before(() => {
   cy.request(`${networks.devnet.node}/api/node/constants`).then(resp => expect(resp.status).to.eq(200));
 });
 
-beforeEach(() => {
-  const btcSettings = deepMergeObj(
-    settings,
-    { token: { list: { BTC: true } } },
-  );
-  window.localStorage.setItem('settings', JSON.stringify(btcSettings));
-});
+// beforeEach(() => {
+//   const btcSettings = deepMergeObj(
+//     settings,
+//     { token: { list: { BTC: true } } },
+//   );
+//   window.localStorage.setItem('settings', JSON.stringify(btcSettings));
+// });
 
 Cypress.Commands.add('addToLocalStorage', (item, value) => {
   window.localStorage.setItem(item, value);
