@@ -6,6 +6,7 @@ class DialogHolder extends React.Component {
     super();
     this.state = {
       dialog: null,
+      dismissed: false,
     };
 
     DialogHolder.singletonRef = this;
@@ -14,24 +15,38 @@ class DialogHolder extends React.Component {
   }
 
   static hideDialog() {
-    this.singletonRef.setState({ dialog: null });
-    document.body.style.overflow = '';
+    this.singletonRef.setState({ dismissed: true });
+    setTimeout(() => {
+      this.singletonRef.setState({ dialog: null });
+      document.body.style.overflow = '';
+    }, 150);
   }
 
   static showDialog(dialog) {
     if (React.isValidElement(dialog)) {
+      const setDialog = () => this.singletonRef.setState({
+        dismissed: false,
+        dialog,
+      });
+
       document.body.style.overflow = 'hidden';
-      this.singletonRef.setState({ dialog });
+      this.singletonRef.setState({
+        dismissed: true,
+        dialog: null,
+      }, setDialog);
       return true;
     }
     return false;
   }
 
   render() {
+    const { dismissed } = this.state;
     const ChildComponent = this.state.dialog;
     return React.isValidElement(ChildComponent) && (
-      <div className={styles.mask}>
-        <ChildComponent.type {...ChildComponent.props} />
+      <div className={`${styles.mask} ${dismissed ? styles.hide : styles.show}`}>
+        <ChildComponent.type
+          {...ChildComponent.props}
+        />
       </div>
     );
   }
