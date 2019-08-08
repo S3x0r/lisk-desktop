@@ -1,7 +1,7 @@
 @import '../../app/variables.css';
 @import '../../app/mixins.css';
 
-@keyframes show {
+@keyframes fadeAndZoomIn {
   from {
     opacity: 0;
     transform: translateY(-50%) scale(0.9);
@@ -15,7 +15,7 @@
   }
 }
 
-@keyframes hide {
+@keyframes fadeAndZoomOut {
   from {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -25,12 +25,38 @@
   to {
     opacity: 0;
     transform: translateY(-50%) scale(0.9);
+    visibility: hidden;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  to {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  to {
+    opacity: 0;
     visibility: hidden;
   }
 }
 
 .mask {
   align-items: center;
+  animation-duration: var(--animation-speed-fastest);
+  animation-timing-function: ease-in-out;
   background-color: var(--color-dialog-mask);
   bottom: 0;
   display: flex;
@@ -41,18 +67,26 @@
   top: 0;
   z-index: var(--dialog-index);
 
+  &.show {
+    animation-name: fadeIn;
+  }
+
+  &.hide {
+    animation-name: fadeOut;
+  }
+
   &.show .wrapper {
-    animation-name: show;
+    animation-name: fadeAndZoomIn;
   }
 
   &.hide .wrapper {
-    animation-name: hide;
+    animation-name: fadeAndZoomOut;
   }
 }
 
 .wrapper {
   animation-duration: var(--animation-speed-fastest);
-  animation-timing-function: linear;
+  animation-timing-function: ease-in-out;
   animation-direction: normal;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
