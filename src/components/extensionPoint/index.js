@@ -2,9 +2,8 @@
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
 import {
-  loadTransactions,
+  getTransactions,
   sent,
-  loadSingleTransaction,
 } from '../../actions/transactions';
 import ExtensionPoint from './extensionPoint';
 
@@ -17,9 +16,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  loadTransactions,
+  getTransactions,
   sent,
-  loadSingleTransaction,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(translate()(ExtensionPoint));

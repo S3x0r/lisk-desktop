@@ -208,11 +208,19 @@ describe('Account middleware', () => {
     expect(store.dispatch).to.not.have.been.calledWith(liskAPIClientMock);
   });
 
+  it(`should dispatch ${actionTypes.networkSet} on ${actionTypes.storeCreated} if settings with network found in localStorage`, async () => {
+    localStorage.setItem('settings', JSON.stringify({
+      network: 'Testnet',
+    }));
+    await middleware(store)(next)(storeCreatedAction);
+    expect(store.dispatch).to.have.been.calledWith(liskAPIClientMock);
+  });
+
   it(`should clean up on ${actionTypes.accountLoggedOut} `, () => {
     const accountLoggedOutAction = {
       type: actionTypes.accountLoggedOut,
     };
     middleware(store)(next)(accountLoggedOutAction);
-    expect(store.dispatch).to.have.been.calledWith({ type: actionTypes.cleanTransactions });
+    expect(store.dispatch).to.have.been.calledWith({ type: actionTypes.emptyTransactionsData });
   });
 });

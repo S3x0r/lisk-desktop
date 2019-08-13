@@ -68,6 +68,7 @@ describe('autoUpdater', () => {
         showErrorBox: spy(),
       },
       win: {
+        send: spy(),
         browser: {
           setProgressBar: spy(),
         },
@@ -160,14 +161,15 @@ describe('autoUpdater', () => {
     expect(params.autoUpdater.quitAndInstall).to.not.have.been.calledWith();
   });
 
-  it('should download the update if update is available and the "Update" button was pressed', () => {
+  it('should Send information to renderer when update is available', () => {
     const newPrams = { ...params, electron };
     autoUpdater(newPrams);
     callbacks['update-available']({ version });
+    expect(params.win.send).to.have.been.calledWith();
+    ipcRenderer.send('update:started');
     clock.tick(1001);
     ipcRenderer.send('update', { text: 'update' });
     clock.tick(100);
-
     expect(params.autoUpdater.downloadUpdate).to.have.been.calledWithExactly();
   });
 

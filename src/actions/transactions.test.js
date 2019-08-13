@@ -2,13 +2,10 @@ import actionTypes from '../constants/actions';
 import txFilters from '../constants/transactionFilters';
 import {
   sent,
-  loadTransactions,
-  loadSingleTransaction,
+  getTransactions,
   updateTransactions,
 } from './transactions';
 import * as transactionsApi from '../utils/api/transactions';
-import * as delegateApi from '../utils/api/delegates';
-import accounts from '../../test/constants/accounts';
 import Fees from '../constants/fees';
 import { toRawLsk } from '../utils/lsk';
 
@@ -64,20 +61,20 @@ describe('actions: transactions', () => {
     });
   });
 
-  describe('loadTransactions', () => {
+  describe('getTransactions', () => {
     const data = {
       address: '15626650747375562521L',
       limit: 20,
       offset: 0,
       filters: { direction: txFilters.all },
     };
-    const actionFunction = loadTransactions(data);
+    const actionFunction = getTransactions(data);
 
     it('should create an action function', () => {
       expect(typeof actionFunction).toBe('function');
     });
 
-    it('should dispatch transactionsLoaded action if resolved', async () => {
+    it('should dispatch getTransactionsSuccess action if resolved', async () => {
       transactionsApi.getTransactions.mockResolvedValue({ data: [], meta: { count: '0' } });
       const expectedAction = {
         count: 0,
@@ -88,100 +85,7 @@ describe('actions: transactions', () => {
 
       await actionFunction(dispatch, getState);
       expect(dispatch).toHaveBeenCalledWith({
-        data: expectedAction, type: actionTypes.transactionsLoaded,
-      });
-    });
-  });
-
-  describe('loadSingleTransaction', () => {
-    const data = {
-      address: '15626650747375562521',
-      limit: 20,
-      offset: 0,
-      filters: {
-        direction: txFilters.all,
-      },
-    };
-    const actionFunction = loadSingleTransaction(data);
-
-    beforeEach(() => {
-      getState = () => ({
-        network: {
-          status: { online: true },
-          name: 'Mainnet',
-          networks: {
-            LSK: {
-              nodeUrl: 'hhtp://localhost:4000',
-              nethash: '198f2b61a8eb95fbeed58b8216780b68f697f26b849acf00c8c93bb9b24f783d',
-            },
-          },
-        },
-        transactions: {
-          filters: {
-            direction: txFilters.all,
-          },
-        },
-        settings: {
-          token: {
-            active: 'LSK',
-          },
-        },
-      });
-    });
-
-    it('should create an action function', () => {
-      expect(typeof actionFunction).toBe('function');
-    });
-
-    it('should dispatch one transactionAddDelegateName action when transaction contains one vote added', async () => {
-      const transactionResponse = {
-        asset: {
-          votes: [`+${accounts.delegate.publicKey}`],
-        },
-      };
-      const delegateResponse = { username: 'peterpan' };
-      const expectedActionPayload = {
-        delegate: delegateResponse,
-        voteArrayName: 'added',
-      };
-      transactionsApi.getSingleTransaction.mockResolvedValue({ data: [transactionResponse] });
-      delegateApi.getDelegates.mockResolvedValue({ data: [delegateResponse] });
-
-      await actionFunction(dispatch, getState);
-      // the following timeout ensures that the async code inside `actionFunction `
-      // is called before the next assertion
-      await setTimeout(() => {});
-      expect(dispatch).toHaveBeenCalledWith({
-        data: transactionResponse, type: actionTypes.transactionLoaded,
-      });
-      expect(dispatch).toHaveBeenCalledWith({
-        data: expectedActionPayload, type: actionTypes.transactionAddDelegateName,
-      });
-    });
-
-    it('should dispatch one transactionAddDelegateName action when transaction contains one vote deleted', async () => {
-      const delegateResponse = { username: 'peterpan' };
-      const transactionResponse = {
-        asset: {
-          votes: [`-${accounts.delegate.publicKey}`],
-        },
-      };
-      transactionsApi.getSingleTransaction.mockResolvedValue({ data: [transactionResponse] });
-      delegateApi.getDelegates.mockResolvedValue({ data: [delegateResponse] });
-      const expectedActionPayload = {
-        delegate: delegateResponse,
-        voteArrayName: 'deleted',
-      };
-
-      await actionFunction(dispatch, getState);
-      // the following timeout ensures that the async code inside `actionFunction `
-      // is called before the next assertion
-      await setTimeout(() => {});
-      expect(dispatch).toHaveBeenCalledWith({
-        data: transactionResponse, type: actionTypes.transactionLoaded,
-      });
-      expect(dispatch).toHaveBeenCalledWith({
-        data: expectedActionPayload, type: actionTypes.transactionAddDelegateName,
+        data: expectedAction, type: actionTypes.getTransactionsSuccess,
       });
     });
   });
@@ -234,7 +138,7 @@ describe('actions: transactions', () => {
       expect(typeof actionFunction).toBe('function');
     });
 
-    it('should dispatch addPendingTransaction action if resolved', async () => {
+    it('should dispatch addNewPendingTransaction action if resolved', async () => {
       transactionsApi.send.mockResolvedValue({ id: '15626650747375562521' });
       const expectedAction = {
         id: '15626650747375562521',

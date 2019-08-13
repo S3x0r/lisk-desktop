@@ -1,5 +1,4 @@
 import i18n from '../i18n';
-import updateModal from './updateModal';
 
 export default ({ // eslint-disable-line max-statements
   autoUpdater, dialog, win, process, electron,
@@ -43,22 +42,22 @@ export default ({ // eslint-disable-line max-statements
 
   autoUpdater.on('update-available', ({ releaseNotes, version }) => {
     updater.error = undefined;
-    const versions = {
-      oldVersion: electron.app.getVersion(),
-      newVersion: version,
-    };
-    const updateApp = () => {
+    const { ipcMain } = electron;
+
+    ipcMain.removeAllListeners('update:started');
+    ipcMain.on('update:started', () => {
       autoUpdater.downloadUpdate();
       setTimeout(() => {
         if (!updater.error) {
-          dialog.showMessageBox({
-            title: i18n.t('Dowload started'),
-            message: i18n.t('The download has started. Depending on your internet speed, it can take several minutes. You will be informed when it is finished and be prompted to restart the app.'),
-          });
+          win.send({ event: 'update:downloading', value: { label: i18n.t('Download started!') } });
         }
       }, 500);
-    };
-    updateModal(electron, releaseNotes, updateApp, versions);
+    });
+
+    win.send({
+      event: 'update:available',
+      value: { releaseNotes, version },
+    });
   });
 
   autoUpdater.on('update-not-available', () => {

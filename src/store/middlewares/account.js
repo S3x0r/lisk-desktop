@@ -5,8 +5,8 @@ import {
 } from '../../actions/account';
 import { loadVotes } from '../../actions/voting';
 import {
-  loadTransactions,
-  cleanTransactions,
+  getTransactions,
+  emptyTransactionsData,
 } from '../../actions/transactions';
 import actionTypes from '../../constants/actions';
 import transactionTypes from '../../constants/transactionTypes';
@@ -21,6 +21,7 @@ import txFilters from '../../constants/transactionFilters';
 
 import { getDeviceList, getHWPublicKeyFromIndex } from '../../utils/hwWallet';
 import { loginType } from '../../constants/hwConstants';
+import localJSONStorage from '../../utils/localJSONStorage';
 
 const updateAccountData = (store) => {
   const { transactions } = store.getState();
@@ -40,7 +41,7 @@ const updateAccountData = (store) => {
    */
   /* istanbul ignore if */
   if (shouldAutoLogIn(getAutoLogInData())) {
-    store.dispatch(loadTransactions({
+    store.dispatch(getTransactions({
       address: account.address,
       filter: txFilters.all,
     }));
@@ -101,6 +102,17 @@ const checkTransactionsAndUpdateAccount = (store, action) => {
   }
 };
 
+const getNetworkFromLocalStorage = () => {
+  const mySettings = localJSONStorage.get('settings', {});
+  if (!mySettings.network) return networks.mainnet;
+  return {
+    ...Object.values(networks).find(
+      ({ name }) => name === mySettings.network.name,
+    ) || networks.mainnet,
+    address: mySettings.network.address,
+  };
+};
+
 // eslint-disable-next-line max-statements
 const checkNetworkToConnet = () => {
   const autologinData = getAutoLogInData();
@@ -129,10 +141,11 @@ const checkNetworkToConnet = () => {
   }
 
   if (!loginNetwork && !autologinData.liskCoreUrl) {
+    const currentNetwork = getNetworkFromLocalStorage();
     loginNetwork = {
-      name: networks.default.name,
+      name: currentNetwork.name,
       network: {
-        ...networks.default,
+        ...currentNetwork,
       },
     };
   }
@@ -193,7 +206,7 @@ const accountMiddleware = store => next => (action) => {
       votePlaced(store, action);
       break;
     case actionTypes.accountLoggedOut:
-      store.dispatch(cleanTransactions());
+      store.dispatch(emptyTransactionsData());
       break;
     /* istanbul ignore next */
     default: break;
