@@ -27,6 +27,7 @@ const entries = {
   vendor: ['babel-polyfill', 'url-polyfill', 'react', 'redux', 'react-dom', 'react-redux'],
   'head.css': `${resolve(__dirname, '../src/assets/css')}/styles.head.css`,
 };
+// eslint-disable-next-line no-unused-vars
 const extractHeadCSS = new ExtractTextPlugin({
   filename: 'head.css',
   allChunks: false,
@@ -49,8 +50,10 @@ const headCssLoader = {
     modules: false,
   },
 };
+// eslint-disable-next-line no-unused-vars
 const headCssLoadersConfig = { ...headCssLoader };
 
+// eslint-disable-next-line no-unused-vars
 const cssLoadersConfig = {
   fallback: 'style-loader',
   use: [
@@ -118,7 +121,7 @@ module.exports = {
       filename: 'styles.css',
       allChunks: true,
     }),
-    extractHeadCSS,
+    // extractHeadCSS,
     new HtmlWebpackPlugin({
       template: './src/index.html',
       VERSION: bundleVersion,
@@ -131,6 +134,11 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.css$/,
+        use: ['ignore-loader'],
+      },
+    /*
+      {
         test: /styles\.head\.css$/,
         use: [].concat(extractHeadCSS.extract(headCssLoadersConfig)),
       },
@@ -138,6 +146,7 @@ module.exports = {
         test: /^((?!styles\.head).)*\.css$/,
         use: ['css-hot-loader'].concat(ExtractTextPlugin.extract(cssLoadersConfig)),
       },
+      */
     ],
   },
 };
