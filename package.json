@@ -89,7 +89,7 @@
     "private": "0.1.8",
     "prop-types": "15.6.2",
     "qrcode.react": "0.8.0",
-    "react": "16.2.0",
+    "react": "16.8.5",
     "react-animate-on-change": "2.1.1",
     "react-chartjs-2": "2.7.4",
     "react-circular-progressbar": "1.0.0",
