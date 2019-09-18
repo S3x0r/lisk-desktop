@@ -23,7 +23,6 @@ module.exports = {
     'src/components/header/signInHeader/signInHeader.test.js',
   ],
   verbose: false,
-  cache: false,
   moduleFileExtensions: ['js'],
   moduleDirectories: ['node_modules'],
   moduleNameMapper: {
