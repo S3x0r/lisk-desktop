@@ -37,6 +37,7 @@ module.exports = {
   ],
   coveragePathIgnorePatterns: [
     '/node_modules/',
+    '.test.js',
     'app/src/ipc.js',
     'app/src/ledger.js',
     'src/actions/liskService.js',
