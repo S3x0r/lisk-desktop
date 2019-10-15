@@ -42,6 +42,29 @@ All JSX should be in `render` method, there shouldn't be any helper methods with
 
 Prefer ternary over '&&' rule: if there is a part of a component that should be rendered only if a condition is met, we prefer `{condition ? <span></span> : null}` over `{condition && <span></span>}`. There might be some old code not following this rule, yet. If you are touching such code, please fix it.
 
+## How to use React Hooks?
+
+[React hooks](https://reactjs.org/docs/hooks-intro.html) are the preferred way to handle state and life cycle effects in the components. 
+We should use functional components with hooks and stop using class-based components when creating 
+new components or performing major refactor on existing components. Since there are many 
+class-based components in our code base and it's not possible to change all at once,
+we are currently in a transition period from class-based components to hooks.
+
+If you're new to hooks, here is a good [React hooks guide](https://wattenberger.com/blog/react-hooks)
+
+### When should we use hooks?
+
+Whenever you need to store some state in a component, you should `import { useState } from 'react'` and use it. Same applies to other official hooks. If there is a more complex behaviour associated with that state, consider creating a custom hook.
+
+### How should we name custom hooks?
+
+The convention is lowerCamelCase, starting with `use`, e.g. `useFilters`, or `useWindowSize`.
+
+### Where should custom hooks live?
+
+In `src/hooks/`, each hook in a separate file, named same as the hook. E.g. `src/hooks/useFilters.js`.
+
+
 ## How to unit-test React components?
 A component should be tested by it's API, that is input and output.
 
