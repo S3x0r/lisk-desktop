@@ -6,6 +6,8 @@ import AccountVisual from './index';
 import accounts from '../../../../test/constants/accounts';
 import breakpoints from '../../../constants/breakpoints';
 
+jest.unmock('./index');
+
 describe('AccountVisual', () => {
   it('should create account visual of an address', () => {
     const wrapper = mount(<AccountVisual address={accounts.genesis.address} />);

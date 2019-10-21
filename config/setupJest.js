@@ -116,6 +116,15 @@ jest.mock('react-i18next', () => ({
   setDefaults: jest.fn(),
 }));
 
+jest.mock('../src/components/toolbox/accountVisual', () =>
+  function AccountVisual({ size, className }) {
+    return (
+      <div style={{ height: size, width: size }} className={className}>
+        <svg height={size} width={size} />
+      </div>
+    );
+  });
+
 const localStorageMock = (() => {
   let store = {};
 
