@@ -44,50 +44,52 @@ class App extends React.Component {
 
     return (
       <ThemeContext.Provider value={theme}>
-        <OfflineWrapper>
-          <DialogHolder />
-          <Header
-            isSigninFlow={routeObj.isSigninFlow}
-            location={location}
-          />
-          <main
-            className={mainClassNames}
-            ref={(el) => { this.main = el; }}
-          >
-            <section>
-              <FlashMessageHolder />
-              <InitializationMessage history={history} />
-              <div className={`${styles.mainContent} ${!routeObj.isSigninFlow ? styles.mainBox : ''}`}>
-                <Switch>
-                  {this.state.loaded && allRoutes.map(route => (
-                    route.isSigninFlow
-                      ? (
-                        <Route
-                          path={route.path}
-                          key={route.path}
-                          component={route.component}
-                          exact={route.exact}
-                        />
-                      ) : (
-                        <CustomRoute
-                          path={route.path}
-                          pathSuffix={route.pathSuffix}
-                          component={route.component}
-                          isPrivate={route.isPrivate}
-                          exact={route.exact}
-                          forbiddenTokens={route.forbiddenTokens}
-                          key={route.path}
-                        />
-                      )
-                  ))}
-                  <Route path="*" component={NotFound} />
-                </Switch>
-              </div>
-            </section>
-            <Toaster />
-          </main>
-          <LoadingBar markAsLoaded={this.markAsLoaded.bind(this)} />
-        </OfflineWrapper>
+        <div data-theme={theme}>
+          <OfflineWrapper>
+            <DialogHolder />
+            <Header
+              isSigninFlow={routeObj.isSigninFlow}
+              location={location}
+            />
+            <main
+              className={mainClassNames}
+              ref={(el) => { this.main = el; }}
+            >
+              <section>
+                <FlashMessageHolder />
+                <InitializationMessage history={history} />
+                <div className={`${styles.mainContent} ${!routeObj.isSigninFlow ? styles.mainBox : ''}`}>
+                  <Switch>
+                    {this.state.loaded && allRoutes.map(route => (
+                      route.isSigninFlow
+                        ? (
+                          <Route
+                            path={route.path}
+                            key={route.path}
+                            component={route.component}
+                            exact={route.exact}
+                          />
+                        ) : (
+                          <CustomRoute
+                            path={route.path}
+                            pathSuffix={route.pathSuffix}
+                            component={route.component}
+                            isPrivate={route.isPrivate}
+                            exact={route.exact}
+                            forbiddenTokens={route.forbiddenTokens}
+                            key={route.path}
+                          />
+                        )
+                    ))}
+                    <Route path="*" component={NotFound} />
+                  </Switch>
+                </div>
+              </section>
+              <Toaster />
+            </main>
+            <LoadingBar markAsLoaded={this.markAsLoaded.bind(this)} />
+          </OfflineWrapper>
+        </div>
       </ThemeContext.Provider>
     );
   }

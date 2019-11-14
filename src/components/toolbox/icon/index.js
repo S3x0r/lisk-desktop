@@ -89,6 +89,7 @@ import warningIcon from '../../../assets/images/icons/warning-icon.svg';
 import warningRound from '../../../assets/images/icons/warning-round.svg';
 import qrCode from '../../../assets/images/icons/qr-code.svg';
 import qrCodeActive from '../../../assets/images/icons/qr-code-active.svg';
+import useTheme from '../../../hooks/useTheme';
 
 export const icons = {
   academy,
@@ -182,9 +183,11 @@ export const icons = {
 };
 
 
-const Icon = ({ name, ...props }) => (
-  <img src={icons[name]} {...props} />
-);
+const Icon = ({ name, ...props }) => {
+  const theme = useTheme();
+  const src = theme === 'dark' && icons[`${name}Dark`] ? icons[`${name}Dark`] : icons[name];
+  return <img src={src} {...props} />;
+};
 
 Icon.propTypes = {
   name: PropTypes.oneOf(Object.keys(icons)).isRequired,
