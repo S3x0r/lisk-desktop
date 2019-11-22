@@ -7,6 +7,7 @@ import { formatAmountBasedOnLocale } from '../../../../utils/formattedNumber';
 import { getUnixTimestampFromValue } from '../../../../utils/datetime';
 import AccountVisualWithAddress from '../../../shared/accountVisualWithAddress';
 import DelegatesTable from '../../../shared/delegatesTable';
+import LatestVotes from './latestVotes';
 import MonitorHeader from '../header';
 import Tooltip from '../../../toolbox/tooltip/tooltip';
 import routes from '../../../../constants/routes';
@@ -114,6 +115,7 @@ const Delegates = ({
   return (
     <div>
       <MonitorHeader />
+      <LatestVotes />
       <DelegatesTable {...{
         columns,
         delegates,
